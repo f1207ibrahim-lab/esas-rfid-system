@@ -5,7 +5,7 @@ let resetCodeData = null;
 // Demo credentials
 const validCredentials = {
   'admin123': { password: '123', name: 'Admin Utama' },
-  'test': { password: '123', name: 'Admin Ujian' }
+  'test123': { password: '123', name: 'Admin Ujian' }
 };
 
 // Check if user is already logged in on page load
