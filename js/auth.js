@@ -4,7 +4,7 @@ let resetCodeData = null;
 
 // Demo credentials
 const validCredentials = {
-  'admin123': { password: '123', name: 'Admin Utama' },
+  'admin1234': { password: '123', name: 'Admin Utama' },
   'test123': { password: '123', name: 'Admin Ujian' }
 };
 
