@@ -68,15 +68,14 @@
 const KOD_ZON_ANDA = "WLY01"; // <<< GANTI DENGAN KOD ZON YANG ANDA PILIH (Cth: WLY01)
 const listContainer = document.getElementById('waktu-solat-list');
 
-// Fungsi utama untuk mengambil data waktu solat dari API
+// Kod dalam waktusolat.html
+// ...
 async function dapatkanWaktuSolatSebenar() {
     const hariIni = new Date();
-    // Format tarikh dalam YYYY-MM-DD
-    const tarikhHariIni = hariIni.toISOString().slice(0, 10); 
+    const tarikhHariIni = hariIni.toISOString().slice(0, 10);
     
-    // URL API (Menggunakan API pihak ketiga yang sah)
-    // API ini memerlukan Kod Zon dan tarikh.
-    const apiUrl = `https://mpt.i906.my/api/prayer/${KOD_ZON_ANDA}/${tarikhHariIni}`;
+    // API ALTERNATIF: Gantikan keseluruhan baris apiUrl dengan yang di bawah
+    const apiUrl = `https://apimosque.azurewebsites.net/api/v1/prayerTime/${KOD_ZON_ANDA}/${tarikhHariIni}`;
 
     try {
         listContainer.innerHTML = '<p style="text-align: center; color: #1a73e8;">Mengambil waktu solat dari pelayan...</p>';
