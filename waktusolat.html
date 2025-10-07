@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Waktu Solat Smart Surau</title>
+    <style>
+        /* CSS ringkas untuk paparan mesra mudah alih */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f9;
+        }
+        .container {
+            max-width: 400px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        h2 {
+            text-align: center;
+            color: #1a73e8;
+            margin-bottom: 20px;
+        }
+        .prayer-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #eee;
+        }
+        .prayer-item:last-child {
+            border-bottom: none;
+        }
+        .prayer-name {
+            font-weight: bold;
+            color: #333;
+        }
+        .highlight {
+            background-color: #e6f7ff;
+            border-radius: 5px;
+            padding: 5px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Waktu Solat (Contoh Data)</h2>
+    <div id="waktu-solat-list">
+        </div>
+    <p style="text-align: center; font-size: 0.8em; margin-top: 20px;">
+        *Data ini adalah contoh. Gantikan dengan API Waktu Solat sebenar.
+    </p>
+</div>
+
+<script>
+    // Data Waktu Solat Contoh (Gantikan dengan panggilan API sebenar)
+    const waktuSolatContoh = [
+        { nama: "Subuh", waktu: "05:50" },
+        { nama: "Syuruk", waktu: "07:07" },
+        { nama: "Zuhur", waktu: "13:10" },
+        { nama: "Asar", waktu: "16:35" },
+        { nama: "Maghrib", waktu: "19:15" },
+        { nama: "Isyak", waktu: "20:25" }
+    ];
+
+    const listContainer = document.getElementById('waktu-solat-list');
+
+    function paparkanWaktuSolat(data) {
+        listContainer.innerHTML = ''; // Kosongkan senarai sedia ada
+        const masaSemasa = dapatkanMasaSemasa(); // Cth: "16:45"
+        let waktuSeterusnyaDitemui = false;
+
+        data.forEach(solat => {
+            const div = document.createElement('div');
+            div.classList.add('prayer-item');
+
+            let waktu = solat.waktu;
+            let nama = solat.nama;
+
+            // Logik ringkas untuk menyerlahkan waktu solat seterusnya
+            if (!waktuSeterusnyaDitemui && nama !== 'Syuruk' && waktuLebihBesar(waktu, masaSemasa)) {
+                div.classList.add('highlight');
+                waktuSeterusnyaDitemui = true;
+            }
+
+            div.innerHTML = `
+                <span class="prayer-name">${nama}</span>
+                <span class="prayer-time">${waktu}</span>
+            `;
+            listContainer.appendChild(div);
+        });
+    }
+
+    // Fungsi Pembantu JS
+    function dapatkanMasaSemasa() {
+        const date = new Date();
+        // Format masa HH:MM
+        const hours = String(date.getHours()).padStart(2, '0');
+        const minutes = String(date.getMinutes()).padStart(2, '0');
+        return `${hours}:${minutes}`;
+    }
+
+    // Fungsi untuk membandingkan masa dalam format "HH:MM"
+    function waktuLebihBesar(waktuA, waktuB) {
+        // Cth: waktuLebihBesar("16:35", "16:30") -> true
+        return waktuA.localeCompare(waktuB) > 0;
+    }
+
+
+    // Panggil fungsi untuk paparan awal
+    paparkanWaktuSolat(waktuSolatContoh);
+
+    // Untuk aplikasi sebenar, anda akan menggunakan fungsi ini untuk mengambil data dari API:
+    /*
+    async function dapatkanWaktuSolatDariAPI(lokasi) {
+        const response = await fetch(`URL_API_WAKTU_SOLAT?lokasi=${lokasi}`);
+        const data = await response.json();
+        // Proses data dan panggil paparkanWaktuSolat(dataTelahDiproses)
+    }
+    */
+</script>
+
+</body>
+</html>
