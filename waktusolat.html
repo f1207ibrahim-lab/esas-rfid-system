@@ -1,138 +1,369 @@
 <!DOCTYPE html>
 <html lang="ms">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Waktu Solat Smart Surau</title>
-    <link rel="stylesheet" href="css/style.css"> 
-    <style>
-        /* CSS Tambahan Khusus untuk Waktu Solat */
-        .prayer-container {
-            max-width: 400px;
-            margin: 20px auto;
-            background-color: #ffffff;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-        }
-        .prayer-title {
-            text-align: center;
-            color: #1a73e8; /* Biru seperti admin dashboard */
-            margin-bottom: 20px;
-            font-size: 1.8em;
-        }
-        .prayer-item {
-            display: flex;
-            justify-content: space-between;
-            padding: 12px 0;
-            border-bottom: 1px solid #eee;
-            align-items: center;
-        }
-        .prayer-item:last-child {
-            border-bottom: none;
-        }
-        .prayer-name {
-            font-weight: bold;
-            color: #333;
-            font-size: 1.1em;
-        }
-        .prayer-time {
-            font-size: 1.2em;
-            color: #1a73e8;
-        }
-        .highlight {
-            background-color: #e6f7ff;
-            border-radius: 8px;
-            padding: 10px;
-            margin: 5px -10px;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Waktu Solat - Smart Surau</title>
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    .date-header {
+      text-align: center;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 25px;
+      border-radius: 15px;
+      margin-bottom: 30px;
+      box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+    }
+
+    .date-header h3 {
+      font-size: 24px;
+      margin-bottom: 5px;
+      color: white;
+    }
+
+    .date-header p {
+      font-size: 16px;
+      opacity: 0.9;
+    }
+
+    .location-selector {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 30px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .location-selector select {
+      padding: 12px 20px;
+      border: 2px solid #e0e0e0;
+      border-radius: 10px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: all 0.3s;
+      background: white;
+    }
+
+    .location-selector select:focus {
+      outline: none;
+      border-color: #667eea;
+    }
+
+    .prayer-times-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 20px;
+      margin-bottom: 30px;
+    }
+
+    .prayer-card {
+      background: white;
+      padding: 25px;
+      border-radius: 15px;
+      text-align: center;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+      transition: all 0.3s;
+      border: 3px solid transparent;
+    }
+
+    .prayer-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+    }
+
+    .prayer-card.active {
+      border-color: #28a745;
+      background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+    }
+
+    .prayer-card.next {
+      border-color: #667eea;
+      background: linear-gradient(135deg, #e7eaf6 0%, #d7dff7 100%);
+    }
+
+    .prayer-icon {
+      font-size: 40px;
+      margin-bottom: 10px;
+    }
+
+    .prayer-name {
+      font-size: 18px;
+      font-weight: bold;
+      color: #333;
+      margin-bottom: 10px;
+    }
+
+    .prayer-time {
+      font-size: 28px;
+      font-weight: bold;
+      color: #667eea;
+      font-family: 'Courier New', monospace;
+    }
+
+    .prayer-badge {
+      display: inline-block;
+      padding: 5px 12px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: bold;
+      margin-top: 10px;
+    }
+
+    .badge-active {
+      background: #28a745;
+      color: white;
+    }
+
+    .badge-next {
+      background: #667eea;
+      color: white;
+    }
+
+    .countdown {
+      text-align: center;
+      background: #f8f9fa;
+      padding: 20px;
+      border-radius: 15px;
+      margin-bottom: 30px;
+    }
+
+    .countdown h4 {
+      color: #333;
+      margin-bottom: 10px;
+      font-size: 18px;
+    }
+
+    .countdown-timer {
+      font-size: 36px;
+      font-weight: bold;
+      color: #667eea;
+      font-family: 'Courier New', monospace;
+    }
+
+    .info-box {
+      background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);
+      padding: 20px;
+      border-radius: 15px;
+      margin-bottom: 30px;
+      border-left: 5px solid #ffc107;
+    }
+
+    .info-box h4 {
+      color: #856404;
+      margin-bottom: 10px;
+      font-size: 18px;
+    }
+
+    .info-box p {
+      color: #856404;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    @media (max-width: 768px) {
+      .prayer-times-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .countdown-timer {
+        font-size: 28px;
+      }
+    }
+  </style>
 </head>
 <body>
+  <div class="container">
+    <h2>🕌 Waktu Solat</h2>
 
-<div class="prayer-container">
-    <h2 class="prayer-title">Jadual Waktu Solat Hari Ini</h2>
-    <div id="waktu-solat-list">
-        <p style="text-align: center;">Memuatkan waktu solat...</p>
+    <div class="date-header">
+      <h3 id="current-date">Selasa, 7 Oktober 2025</h3>
+      <p id="hijri-date">26 Rabiul Akhir 1447H</p>
     </div>
-    <p style="text-align: center; font-size: 0.8em; margin-top: 20px; color: #666;">
-        *Data ini adalah contoh. Gantikan dengan API Waktu Solat sebenar.
-    </p>
-</div>
 
-<script>
-    // DATA WAKTU SOLAT CONTOH
-    const waktuSolatContoh = [
-        { nama: "Imsak", waktu: "05:40" },
-        { nama: "Subuh", waktu: "05:50" },
-        { nama: "Syuruk", waktu: "07:07" },
-        { nama: "Zuhur", waktu: "13:10" },
-        { nama: "Asar", waktu: "16:35" },
-        { nama: "Maghrib", waktu: "19:15" },
-        { nama: "Isyak", waktu: "20:25" }
-    ];
+    <div class="location-selector">
+      <select id="state-select" onchange="updatePrayerTimes()">
+        <option value="selangor">Selangor</option>
+        <option value="wp">Wilayah Persekutuan</option>
+        <option value="johor">Johor</option>
+        <option value="kedah">Kedah</option>
+        <option value="kelantan">Kelantan</option>
+        <option value="melaka">Melaka</option>
+        <option value="nsembilan">Negeri Sembilan</option>
+        <option value="pahang">Pahang</option>
+        <option value="penang">Pulau Pinang</option>
+        <option value="perak">Perak</option>
+        <option value="perlis">Perlis</option>
+        <option value="sabah">Sabah</option>
+        <option value="sarawak">Sarawak</option>
+        <option value="terengganu">Terengganu</option>
+      </select>
+    </div>
 
-    const listContainer = document.getElementById('waktu-solat-list');
+    <div class="countdown">
+      <h4>⏰ Masa Sehingga Solat Seterusnya</h4>
+      <div class="countdown-timer" id="countdown">00:00:00</div>
+    </div>
 
-    function paparkanWaktuSolat(data) {
-        listContainer.innerHTML = ''; // Kosongkan senarai sedia ada
-        const masaSemasa = dapatkanMasaSemasa(); // Cth: "16:45"
-        let waktuSeterusnyaDitemui = false;
+    <div class="prayer-times-grid" id="prayer-times">
+      <!-- Prayer cards will be inserted here -->
+    </div>
 
-        data.forEach(solat => {
-            const div = document.createElement('div');
-            div.classList.add('prayer-item');
+    <div class="info-box">
+      <h4>ℹ️ Maklumat</h4>
+      <p>Waktu solat dipaparkan berdasarkan zon yang dipilih. Sila pastikan lokasi anda adalah tepat untuk mendapat waktu solat yang betul.</p>
+    </div>
 
-            let waktu = solat.waktu;
-            let nama = solat.nama;
+    <a href="index.html" class="back">← Kembali</a>
+  </div>
 
-            // Logik untuk menyerlahkan waktu solat seterusnya
-            // Kita abaikan Imsak dan Syuruk untuk penyerlahan solat fardhu
-            if (nama !== 'Imsak' && nama !== 'Syuruk' && !waktuSeterusnyaDitemui && waktuLebihBesar(waktu, masaSemasa)) {
-                div.classList.add('highlight');
-                waktuSeterusnyaDitemui = true;
-            }
+  <script>
+    const prayerData = {
+      selangor: {
+        imsak: '05:45',
+        subuh: '05:55',
+        syuruk: '07:06',
+        zohor: '13:15',
+        asar: '16:30',
+        maghrib: '19:18',
+        isyak: '20:30'
+      },
+      wp: {
+        imsak: '05:43',
+        subuh: '05:53',
+        syuruk: '07:04',
+        zohor: '13:13',
+        asar: '16:28',
+        maghrib: '19:16',
+        isyak: '20:28'
+      },
+      johor: {
+        imsak: '05:35',
+        subuh: '05:45',
+        syuruk: '06:56',
+        zohor: '13:05',
+        asar: '16:20',
+        maghrib: '19:08',
+        isyak: '20:20'
+      }
+    };
 
-            div.innerHTML = `
-                <span class="prayer-name">${nama}</span>
-                <span class="prayer-time">${waktu}</span>
-            `;
-            listContainer.appendChild(div);
-        });
+    const prayerNames = {
+      imsak: { name: 'Imsak', icon: '🌙' },
+      subuh: { name: 'Subuh', icon: '🌅' },
+      syuruk: { name: 'Syuruk', icon: '☀️' },
+      zohor: { name: 'Zohor', icon: '🌞' },
+      asar: { name: 'Asar', icon: '🌤️' },
+      maghrib: { name: 'Maghrib', icon: '🌆' },
+      isyak: { name: 'Isyak', icon: '✨' }
+    };
 
-        // Jika waktu seterusnya tidak ditemui (bermakna sudah Isyak), serlahkan Subuh hari esok
-        if (!waktuSeterusnyaDitemui) {
-            // Ini adalah logik ringkas untuk menyerlahkan item pertama (Imsak/Subuh)
-            const firstItem = listContainer.querySelector('.prayer-item');
-            if (firstItem) {
-                firstItem.classList.add('highlight');
-            }
+    function getCurrentTime() {
+      return new Date();
+    }
+
+    function timeToMinutes(timeStr) {
+      const [hours, minutes] = timeStr.split(':').map(Number);
+      return hours * 60 + minutes;
+    }
+
+    function getCurrentPrayer(times) {
+      const now = getCurrentTime();
+      const currentMinutes = now.getHours() * 60 + now.getMinutes();
+
+      let currentPrayer = null;
+      let nextPrayer = null;
+
+      const prayers = Object.keys(times);
+      
+      for (let i = 0; i < prayers.length; i++) {
+        const prayerMinutes = timeToMinutes(times[prayers[i]]);
+        
+        if (currentMinutes >= prayerMinutes) {
+          currentPrayer = prayers[i];
+        } else if (!nextPrayer) {
+          nextPrayer = prayers[i];
+          break;
         }
+      }
+
+      if (!nextPrayer) {
+        nextPrayer = 'subuh'; // Next day's Subuh
+      }
+
+      return { current: currentPrayer, next: nextPrayer };
     }
 
-    // Fungsi Pembantu JS
-    function dapatkanMasaSemasa() {
-        const date = new Date();
-        // Format masa HH:MM
-        const hours = String(date.getHours()).padStart(2, '0');
-        const minutes = String(date.getMinutes()).padStart(2, '0');
-        return `${hours}:${minutes}`;
+    function updateCountdown() {
+      const state = document.getElementById('state-select').value;
+      const times = prayerData[state] || prayerData.selangor;
+      const { next } = getCurrentPrayer(times);
+      
+      const now = getCurrentTime();
+      const currentMinutes = now.getHours() * 60 + now.getMinutes() + now.getSeconds() / 60;
+      const nextPrayerMinutes = timeToMinutes(times[next]);
+      
+      let diff = nextPrayerMinutes - currentMinutes;
+      
+      if (diff < 0) {
+        diff += 24 * 60; // Next day
+      }
+      
+      const hours = Math.floor(diff / 60);
+      const minutes = Math.floor(diff % 60);
+      const seconds = Math.floor((diff * 60) % 60);
+      
+      document.getElementById('countdown').textContent = 
+        `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
     }
 
-    // Fungsi untuk membandingkan masa dalam format "HH:MM"
-    function waktuLebihBesar(waktuA, waktuB) {
-        // Mengembalikan true jika waktuA (waktu solat) lebih lewat dari waktuB (masa semasa)
-        return waktuA.localeCompare(waktuB) > 0;
+    function updatePrayerTimes() {
+      const state = document.getElementById('state-select').value;
+      const times = prayerData[state] || prayerData.selangor;
+      const { current, next } = getCurrentPrayer(times);
+      
+      const container = document.getElementById('prayer-times');
+      container.innerHTML = '';
+      
+      Object.keys(times).forEach(prayer => {
+        const isActive = prayer === current;
+        const isNext = prayer === next;
+        
+        const card = document.createElement('div');
+        card.className = `prayer-card ${isActive ? 'active' : ''} ${isNext ? 'next' : ''}`;
+        
+        card.innerHTML = `
+          <div class="prayer-icon">${prayerNames[prayer].icon}</div>
+          <div class="prayer-name">${prayerNames[prayer].name}</div>
+          <div class="prayer-time">${times[prayer]}</div>
+          ${isActive ? '<span class="prayer-badge badge-active">SEDANG WAKTU</span>' : ''}
+          ${isNext ? '<span class="prayer-badge badge-next">SETERUSNYA</span>' : ''}
+        `;
+        
+        container.appendChild(card);
+      });
     }
 
+    function updateDate() {
+      const now = new Date();
+      const days = ['Ahad', 'Isnin', 'Selasa', 'Rabu', 'Khamis', 'Jumaat', 'Sabtu'];
+      const months = ['Januari', 'Februari', 'Mac', 'April', 'Mei', 'Jun', 
+                     'Julai', 'Ogos', 'September', 'Oktober', 'November', 'Disember'];
+      
+      const dateStr = `${days[now.getDay()]}, ${now.getDate()} ${months[now.getMonth()]} ${now.getFullYear()}`;
+      document.getElementById('current-date').textContent = dateStr;
+    }
 
-    // Panggil fungsi untuk paparan awal
-    paparkanWaktuSolat(waktuSolatContoh);
-
-    // Anda boleh menambah fungsi untuk mengemas kini masa semasa setiap minit
-    // setInterval(() => { paparkanWaktuSolat(waktuSolatContoh); }, 60000);
+    // Initialize
+    updateDate();
+    updatePrayerTimes();
+    updateCountdown();
     
-</script>
-
+    // Update countdown every second
+    setInterval(updateCountdown, 1000);
+    
+    // Update prayer times every minute
+    setInterval(updatePrayerTimes, 60000);
+  </script>
 </body>
 </html>
