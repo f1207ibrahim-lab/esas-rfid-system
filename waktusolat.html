@@ -64,113 +64,61 @@
 </div>
 
 <script>
-    // Konfigurasi API
-const KOD_ZON_ANDA = "WLY01"; // <<< GANTI DENGAN KOD ZON YANG ANDA PILIH (Cth: WLY01)
+// Konfigurasi API
+// KOD ZON (JHR01) - Pastikan anda sudah ganti ini jika lokasi anda bukan Johor Bahru
+const KOD_ZON_ANDA = "JHR01"; 
 const listContainer = document.getElementById('waktu-solat-list');
 
-// Kod dalam waktusolat.html
-// ...
+// Fungsi utama untuk mengambil data waktu solat dari API (Menggunakan API Alternatif Baru)
 async function dapatkanWaktuSolatSebenar() {
-    const hariIni = new Date();
-    const tarikhHariIni = hariIni.toISOString().slice(0, 10);
-    
-    // API ALTERNATIF: Gantikan keseluruhan baris apiUrl dengan yang di bawah
-    const apiUrl = `https://apimosque.azurewebsites.net/api/v1/prayerTime/${KOD_ZON_ANDA}/${tarikhHariIni}`;
+    // API ALTERNATIF KETIGA: Menggunakan api.azan.info.ms (ringkas dan stabil)
+    const apiUrl = `https://api.azan.info.ms/time/${KOD_ZON_ANDA}`;
 
     try {
-        listContainer.innerHTML = '<p style="text-align: center; color: #1a73e8;">Mengambil waktu solat dari pelayan...</p>';
+        listContainer.innerHTML = '<p style="text-align: center; color: #1a73e8;">Mengambil waktu solat sebenar...</p>';
         
         const response = await fetch(apiUrl);
         
         if (!response.ok) {
-            // Jika status HTTP bukan 200 OK
-            throw new Error(`Ralat HTTP! Status: ${response.status}`);
+            throw new Error(`Ralat HTTP: ${response.status}`);
         }
         
         const dataAPI = await response.json();
 
-        if (dataAPI.status === 'ok' && dataAPI.data) {
+        if (dataAPI.times) {
             
-            // Proses data yang diterima ke dalam format yang kita perlukan
-            // Nama dalam API: imsak, subuh, syuruk, zuhur, asar, maghrib, isyak
+            // PENTING: Menyesuaikan pemprosesan data untuk API BAHARU
+            const times = dataAPI.times;
             const dataWaktuSolat = [
-                { nama: "Imsak", waktu: dataAPI.data.imsak },
-                { nama: "Subuh", waktu: dataAPI.data.subuh },
-                { nama: "Syuruk", waktu: dataAPI.data.syuruk },
-                { nama: "Zuhur", waktu: dataAPI.data.zuhur },
-                { nama: "Asar", waktu: dataAPI.data.asar },
-                { nama: "Maghrib", waktu: dataAPI.data.maghrib },
-                { nama: "Isyak", waktu: dataAPI.data.isyak }
+                { nama: "Imsak", waktu: times.imsak.substring(0, 5) },
+                { nama: "Subuh", waktu: times.subuh.substring(0, 5) },
+                { nama: "Syuruk", waktu: times.syuruk.substring(0, 5) },
+                { nama: "Zuhur", waktu: times.zohor.substring(0, 5) }, // API ini guna 'zohor'
+                { nama: "Asar", waktu: times.asar.substring(0, 5) },
+                { nama: "Maghrib", waktu: times.maghrib.substring(0, 5) },
+                { nama: "Isyak", waktu: times.isyak.substring(0, 5) }
             ];
 
             // Paparkan data sebenar
             paparkanWaktuSolat(dataWaktuSolat);
 
         } else {
-             throw new Error('Data API tidak sah atau tidak lengkap.');
+             throw new Error('Data Waktu Solat tidak ditemui dalam respons API.');
         }
 
     } catch (error) {
         console.error("Ralat Waktu Solat:", error);
-        listContainer.innerHTML = `<p style="text-align: center; color: red;">❌ Gagal memuatkan waktu solat. Sila semak sambungan internet atau Kod Zon (${KOD_ZON_ANDA}).</p>`;
+        listContainer.innerHTML = `<p style="text-align: center; color: red;">❌ Gagal memuatkan waktu solat. Sila sahkan Kod Zon ${KOD_ZON_ANDA}.</p>`;
     }
 }
 
 // ----------------------------------------------------------------------
-// FUNGSI PAPARAN (Kekal sama, tetapi kini menggunakan data sebenar)
+// FUNGSI PAPARAN (Kekal Sama)
 // ----------------------------------------------------------------------
+// (Pastikan fungsi paparkanWaktuSolat(), dapatkanMasaSemasa(), dan waktuLebihBesar()
+// kekal sama seperti kod anda yang lepas, di bawah fungsi baharu ini)
 
-function paparkanWaktuSolat(data) {
-    listContainer.innerHTML = ''; 
-    const masaSemasa = dapatkanMasaSemasa(); 
-    let waktuSeterusnyaDitemui = false;
-
-    data.forEach(solat => {
-        const div = document.createElement('div');
-        div.classList.add('prayer-item');
-
-        let waktu = solat.waktu;
-        let nama = solat.nama;
-
-        // Logik penyerlahan untuk waktu solat fardhu seterusnya
-        if (nama !== 'Imsak' && nama !== 'Syuruk' && !waktuSeterusnyaDitemui && waktuLebihBesar(waktu, masaSemasa)) {
-            div.classList.add('highlight');
-            waktuSeterusnyaDitemui = true;
-        }
-
-        div.innerHTML = `
-            <span class="prayer-name">${nama}</span>
-            <span class="prayer-time">${waktu}</span>
-        `;
-        listContainer.appendChild(div);
-    });
-
-    // Jika waktu seterusnya tidak ditemui (bermakna sudah Isyak), serlahkan Subuh/Imsak hari esok
-    if (!waktuSeterusnyaDitemui) {
-        const firstItem = listContainer.querySelector('.prayer-item');
-        if (firstItem) {
-            firstItem.classList.add('highlight');
-        }
-    }
-}
-
-// Fungsi Pembantu JS untuk mendapatkan masa dalam format "HH:MM"
-function dapatkanMasaSemasa() {
-    const date = new Date();
-    // Tambah 8 jam untuk GMT+8 (Jika anda tidak menjalankan kod ini di Malaysia)
-    // const date = new Date(new Date().getTime() + (8 * 60 * 60 * 1000)); 
-    const hours = String(date.getHours()).padStart(2, '0');
-    const minutes = String(date.getMinutes()).padStart(2, '0');
-    return `${hours}:${minutes}`;
-}
-
-// Fungsi untuk membandingkan masa
-function waktuLebihBesar(waktuA, waktuB) {
-    return waktuA.localeCompare(waktuB) > 0;
-}
-
-
-// MULA APLIKASI: Panggil fungsi untuk memuatkan waktu solat sebenar
+// Panggil fungsi baharu
 dapatkanWaktuSolatSebenar();
 </script>
 
