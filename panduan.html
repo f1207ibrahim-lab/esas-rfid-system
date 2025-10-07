@@ -1,178 +1,424 @@
 <!DOCTYPE html>
 <html lang="ms">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Panduan Solat & Wuduk</title>
-    <link rel="stylesheet" href="css/style.css">
-    <style>
-        /* CSS Khusus Panduan */
-        body {
-            background-color: #f4f4f9;
-        }
-        .guide-container {
-            max-width: 600px;
-            margin: 20px auto;
-            background-color: #ffffff;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-        }
-        .guide-title {
-            text-align: center;
-            color: #1a73e8;
-            margin-bottom: 20px;
-            font-size: 2em;
-        }
-        .section-header {
-            background-color: #e6f7ff;
-            color: #1a73e8;
-            padding: 10px;
-            margin-top: 25px;
-            border-radius: 5px;
-            font-size: 1.2em;
-            font-weight: bold;
-        }
-        .step-item {
-            display: flex;
-            align-items: flex-start;
-            padding: 15px 0;
-            border-bottom: 1px dashed #ddd;
-        }
-        .step-number {
-            font-size: 1.5em;
-            font-weight: bold;
-            color: #cc0000;
-            margin-right: 15px;
-            flex-shrink: 0;
-            padding-top: 5px;
-        }
-        .step-text h4 {
-            margin-top: 0;
-            margin-bottom: 5px;
-            color: #333;
-        }
-        .step-text p {
-            margin: 0;
-            font-size: 0.9em;
-            color: #666;
-        }
-        .back-link {
-            display: block; 
-            text-align: center; 
-            margin-top: 30px; 
-            color: #1a73e8; 
-            font-weight: bold;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Panduan Wuduk & Solat</title>
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    .tabs {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 30px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .tab-button {
+      padding: 12px 30px;
+      background: #f5f5f5;
+      color: #333;
+      border: 2px solid #e0e0e0;
+      border-radius: 10px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .tab-button:hover {
+      background: #e0e0e0;
+    }
+
+    .tab-button.active {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border-color: #667eea;
+    }
+
+    .tab-content {
+      display: none;
+    }
+
+    .tab-content.active {
+      display: block;
+      animation: fadeIn 0.3s;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .guide-section {
+      background: #f8f9fa;
+      padding: 25px;
+      border-radius: 15px;
+      margin-bottom: 20px;
+      border-left: 5px solid #667eea;
+    }
+
+    .guide-section h3 {
+      color: #667eea;
+      margin-bottom: 15px;
+      font-size: 22px;
+    }
+
+    .steps-list {
+      list-style: none;
+      counter-reset: step-counter;
+    }
+
+    .steps-list li {
+      counter-increment: step-counter;
+      padding: 15px;
+      margin-bottom: 15px;
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      position: relative;
+      padding-left: 60px;
+    }
+
+    .steps-list li::before {
+      content: counter(step-counter);
+      position: absolute;
+      left: 15px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 35px;
+      height: 35px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      font-size: 16px;
+    }
+
+    .steps-list li strong {
+      color: #667eea;
+      display: block;
+      margin-bottom: 5px;
+      font-size: 16px;
+    }
+
+    .doa-box {
+      background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+      padding: 20px;
+      border-radius: 15px;
+      margin: 20px 0;
+      border: 2px solid #28a745;
+    }
+
+    .doa-box h4 {
+      color: #155724;
+      margin-bottom: 10px;
+      font-size: 18px;
+    }
+
+    .doa-arabic {
+      font-size: 24px;
+      text-align: right;
+      font-family: 'Traditional Arabic', 'Arabic Typesetting', serif;
+      line-height: 2;
+      color: #155724;
+      margin-bottom: 10px;
+      direction: rtl;
+    }
+
+    .doa-translation {
+      font-style: italic;
+      color: #155724;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .warning-box {
+      background: #fff3cd;
+      padding: 20px;
+      border-radius: 15px;
+      margin: 20px 0;
+      border-left: 5px solid #ffc107;
+    }
+
+    .warning-box h4 {
+      color: #856404;
+      margin-bottom: 10px;
+      font-size: 18px;
+    }
+
+    .warning-box p {
+      color: #856404;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .info-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+      margin: 20px 0;
+    }
+
+    .info-card {
+      background: white;
+      padding: 20px;
+      border-radius: 15px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+      text-align: center;
+      transition: all 0.3s;
+    }
+
+    .info-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+    }
+
+    .info-card-icon {
+      font-size: 48px;
+      margin-bottom: 15px;
+    }
+
+    .info-card h4 {
+      color: #333;
+      margin-bottom: 10px;
+      font-size: 18px;
+    }
+
+    .info-card p {
+      color: #666;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    @media (max-width: 768px) {
+      .steps-list li {
+        padding-left: 55px;
+      }
+
+      .doa-arabic {
+        font-size: 20px;
+      }
+    }
+  </style>
 </head>
 <body>
+  <div class="container">
+    <h2>📖 Panduan Wuduk & Solat</h2>
 
-<div class="guide-container">
-    <h2 class="guide-title">Panduan Wuduk & Solat Ringkas</h2>
-
-    <div class="section-header">1. Panduan Wuduk (Rukun)</div>
-    
-    <div class="step-item">
-        <span class="step-number">1.</span>
-        <div class="step-text">
-            <h4>Niat</h4>
-            <p>Niat di dalam hati ketika air pertama menyentuh muka.</p>
-        </div>
-    </div>
-    
-    <div class="step-item">
-        <span class="step-number">2.</span>
-        <div class="step-text">
-            <h4>Membasuh Muka</h4>
-            <p>Basuh seluruh permukaan muka, dari tempat tumbuh rambut hingga ke dagu dan dari telinga ke telinga.</p>
-        </div>
-    </div>
-    
-    <div class="step-item">
-        <span class="step-number">3.</span>
-        <div class="step-text">
-            <h4>Membasuh Kedua Belah Tangan</h4>
-            <p>Basuh kedua-dua belah tangan sehingga siku.</p>
-        </div>
-    </div>
-    
-    <div class="step-item">
-        <span class="step-number">4.</span>
-        <div class="step-text">
-            <h4>Menyapu Sebahagian Kepala</h4>
-            <p>Sapukan sedikit air di atas kepala.</p>
-        </div>
-    </div>
-    
-    <div class="step-item">
-        <span class="step-number">5.</span>
-        <div class="step-text">
-            <h4>Membasuh Kedua Belah Kaki</h4>
-            <p>Basuh kedua-dua belah kaki sehingga buku lali.</p>
-        </div>
-    </div>
-    
-    <div class="step-item">
-        <span class="step-number">6.</span>
-        <div class="step-text">
-            <h4>Tertib</h4>
-            <p>Melakukan semua rukun mengikut urutan (tertib).</p>
-        </div>
-    </div>
-    
-    <div class="section-header">2. Panduan Solat Fardhu (Pergerakan)</div>
-
-    <div class="step-item">
-        <span class="step-number">1.</span>
-        <div class="step-text">
-            <h4>Niat dan Takbiratulihram</h4>
-            <p>Berdiri tegak menghadap kiblat. Niat dalam hati diikuti lafaz Takbiratulihram (mengangkat tangan).</p>
-        </div>
-    </div>
-    
-    <div class="step-item">
-        <span class="step-number">2.</span>
-        <div class="step-text">
-            <h4>Membaca Al-Fatihah</h4>
-            <p>Membaca Surah Al-Fatihah dan surah pendek lain (selepas rakaat pertama dan kedua).</p>
-        </div>
-    </div>
-    
-    <div class="step-item">
-        <span class="step-number">3.</span>
-        <div class="step-text">
-            <h4>Rukuk & I'tidal</h4>
-            <p>Rukuk (membongkokkan badan) diikuti bangun tegak (I'tidal).</p>
-        </div>
-    </div>
-    
-    <div class="step-item">
-        <span class="step-number">4.</span>
-        <div class="step-text">
-            <h4>Sujud</h4>
-            <p>Sujud dengan meletakkan dahi, hidung, dua tapak tangan, dua lutut, dan jari kaki di lantai (dua kali).</p>
-        </div>
-    </div>
-    
-    <div class="step-item">
-        <span class="step-number">5.</span>
-        <div class="step-text">
-            <h4>Duduk Antara Dua Sujud</h4>
-            <p>Duduk di antara dua sujud (duduk iftirasy).</p>
-        </div>
-    </div>
-    
-    <div class="step-item">
-        <span class="step-number">6.</span>
-        <div class="step-text">
-            <h4>Tahiyat Akhir & Salam</h4>
-            <p>Duduk Tahiyat Akhir diikuti dengan memberi salam ke kanan dan kiri.</p>
-        </div>
+    <div class="tabs">
+      <button class="tab-button active" onclick="showTab('wuduk')">🚿 Wuduk</button>
+      <button class="tab-button" onclick="showTab('solat')">🤲 Solat</button>
+      <button class="tab-button" onclick="showTab('doa')">📿 Doa-Doa</button>
     </div>
 
-    <a href="index.html" class="back-link">← Kembali ke Menu Utama</a>
-</div>
+    <!-- Tab Wuduk -->
+    <div id="wuduk" class="tab-content active">
+      <div class="guide-section">
+        <h3>🚿 Cara Berwuduk</h3>
+        
+        <div class="doa-box">
+          <h4>Niat Wuduk</h4>
+          <div class="doa-arabic">
+            نَوَيْتُ الْوُضُوْءَ لِرَفْعِ الْحَدَثِ اْلاَصْغَرِ فَرْضًا ِللهِ تَعَالَى
+          </div>
+          <div class="doa-translation">
+            Maksudnya: "Sahaja aku berniat berwuduk untuk menghilangkan hadath kecil fardu (kerana) Allah Taala."
+          </div>
+        </div>
 
+        <ol class="steps-list">
+          <li>
+            <strong>Basuh Muka</strong>
+            Basuh seluruh muka dari dahi hingga dagu dan dari telinga kanan ke telinga kiri sebanyak 3 kali.
+          </li>
+          <li>
+            <strong>Basuh Tangan</strong>
+            Basuh kedua-dua tangan dari hujung jari hingga ke siku sebanyak 3 kali. Mulakan dengan tangan kanan.
+          </li>
+          <li>
+            <strong>Sapu Kepala</strong>
+            Sapukan tangan yang basah pada kepala dari depan ke belakang dan dari belakang ke depan sekali sahaja.
+          </li>
+          <li>
+            <strong>Sapu Telinga</strong>
+            Sapukan jari telunjuk di dalam telinga dan ibu jari di belakang telinga.
+          </li>
+          <li>
+            <strong>Basuh Kaki</strong>
+            Basuh kedua-dua kaki dari hujung jari hingga ke buku lali sebanyak 3 kali. Mulakan dengan kaki kanan.
+          </li>
+        </ol>
+
+        <div class="warning-box">
+          <h4>⚠️ Perkara Yang Membatalkan Wuduk</h4>
+          <p>• Keluar sesuatu dari qubul atau dubur (kencing, buang air besar, kentut)<br>
+          • Hilang akal (tidur, pengsan, mabuk)<br>
+          • Bersentuhan kulit antara lelaki dan perempuan bukan mahram<br>
+          • Menyentuh kemaluan dengan tapak tangan</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tab Solat -->
+    <div id="solat" class="tab-content">
+      <div class="guide-section">
+        <h3>🤲 Cara Mengerjakan Solat</h3>
+        
+        <ol class="steps-list">
+          <li>
+            <strong>Niat</strong>
+            Berniat dalam hati untuk mengerjakan solat yang akan dikerjakan.
+          </li>
+          <li>
+            <strong>Takbiratul Ihram</strong>
+            Mengangkat kedua-dua tangan sejajar dengan bahu sambil membaca "Allahu Akbar".
+          </li>
+          <li>
+            <strong>Al-Fatihah</strong>
+            Membaca surah Al-Fatihah pada setiap rakaat.
+          </li>
+          <li>
+            <strong>Surah/Ayat Al-Quran</strong>
+            Membaca surah atau ayat Al-Quran selepas Al-Fatihah pada rakaat pertama dan kedua.
+          </li>
+          <li>
+            <strong>Rukuk</strong>
+            Tunduk dengan meletakkan tangan di atas lutut sambil membaca tasbih.
+          </li>
+          <li>
+            <strong>I'tidal</strong>
+            Bangun dari rukuk dengan mengangkat tangan dan membaca "Sami'allahu liman hamidah".
+          </li>
+          <li>
+            <strong>Sujud</strong>
+            Sujud sebanyak 2 kali dengan meletakkan dahi, hidung, kedua-dua tapak tangan, lutut dan hujung kaki di atas tempat sujud.
+          </li>
+          <li>
+            <strong>Duduk Antara Dua Sujud</strong>
+            Duduk sebentar di antara dua sujud sambil membaca doa.
+          </li>
+          <li>
+            <strong>Tahiyat Awal & Akhir</strong>
+            Membaca tahiyat pada rakaat kedua (tahiyat awal) dan rakaat terakhir (tahiyat akhir).
+          </li>
+          <li>
+            <strong>Salam</strong>
+            Memberi salam ke kanan dan ke kiri untuk menyempurnakan solat.
+          </li>
+        </ol>
+      </div>
+
+      <div class="info-grid">
+        <div class="info-card">
+          <div class="info-card-icon">🕐</div>
+          <h4>Subuh</h4>
+          <p>2 rakaat</p>
+        </div>
+        <div class="info-card">
+          <div class="info-card-icon">☀️</div>
+          <h4>Zohor</h4>
+          <p>4 rakaat</p>
+        </div>
+        <div class="info-card">
+          <div class="info-card-icon">🌤️</div>
+          <h4>Asar</h4>
+          <p>4 rakaat</p>
+        </div>
+        <div class="info-card">
+          <div class="info-card-icon">🌆</div>
+          <h4>Maghrib</h4>
+          <p>3 rakaat</p>
+        </div>
+        <div class="info-card">
+          <div class="info-card-icon">✨</div>
+          <h4>Isyak</h4>
+          <p>4 rakaat</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tab Doa -->
+    <div id="doa" class="tab-content">
+      <div class="guide-section">
+        <h3>📿 Doa-Doa Harian</h3>
+        
+        <div class="doa-box">
+          <h4>Doa Selepas Azan</h4>
+          <div class="doa-arabic">
+            اَللَّهُمَّ رَبَّ هَذِهِ الدَّعْوَةِ التَّامَّةِ وَالصَّلاَةِ الْقَائِمَةِ آتِ مُحَمَّدًا الْوَسِيْلَةَ وَالْفَضِيْلَةَ وَابْعَثْهُ مَقَامًا مَحْمُوْدًا الَّذِيْ وَعَدْتَهُ
+          </div>
+          <div class="doa-translation">
+            Ya Allah, Tuhan yang memiliki seruan yang sempurna ini, dan solat yang akan didirikan. Berilah kepada Nabi Muhammad wasilah dan keutamaan, dan bangkitkanlah dia ke tempat yang terpuji yang telah Engkau janjikan kepadanya.
+          </div>
+        </div>
+
+        <div class="doa-box">
+          <h4>Doa Masuk Masjid</h4>
+          <div class="doa-arabic">
+            اَللَّهُمَّ افْتَحْ لِيْ أَبْوَابَ رَحْمَتِكَ
+          </div>
+          <div class="doa-translation">
+            Ya Allah, bukakanlah untukku pintu-pintu rahmat-Mu.
+          </div>
+        </div>
+
+        <div class="doa-box">
+          <h4>Doa Keluar Masjid</h4>
+          <div class="doa-arabic">
+            اَللَّهُمَّ إِنِّيْ أَسْأَلُكَ مِنْ فَضْلِكَ
+          </div>
+          <div class="doa-translation">
+            Ya Allah, sesungguhnya aku memohon kepada-Mu kurnia-Mu.
+          </div>
+        </div>
+
+        <div class="doa-box">
+          <h4>Doa Qunut</h4>
+          <div class="doa-arabic">
+            اَللَّهُمَّ اهْدِنِيْ فِيْمَنْ هَدَيْتَ، وَعَافِنِيْ فِيْمَنْ عَافَيْتَ، وَتَوَلَّنِيْ فِيْمَنْ تَوَلَّيْتَ، وَبَارِكْ لِيْ فِيْمَا أَعْطَيْتَ، وَقِنِيْ شَرَّ مَا قَضَيْتَ، فَإِنَّكَ تَقْضِيْ وَلاَ يُقْضَى عَلَيْكَ، وَإِنَّهُ لاَ يَذِلُّ مَنْ وَالَيْتَ، وَلاَ يَعِزُّ مَنْ عَادَيْتَ، تَبَارَكْتَ رَبَّنَا وَتَعَالَيْتَ
+          </div>
+          <div class="doa-translation">
+            Ya Allah, berilah aku petunjuk bersama orang-orang yang Engkau beri petunjuk, berilah aku kesihatan bersama orang-orang yang Engkau beri kesihatan, peliharalah aku bersama orang-orang yang Engkau pelihara, berkatilah untukku apa yang Engkau berikan kepadaku, dan peliharalah aku dari kejahatan yang telah Engkau tetapkan. Sesungguhnya Engkaulah yang menetapkan dan tidak ada yang dapat menetapkan sesuatu ke atas-Mu. Dan sesungguhnya tidak akan hina orang yang Engkau berikan kemuliaan, dan tidak akan mulia orang yang Engkau musuhi. Maha Suci Engkau ya Tuhan kami dan Maha Tinggi.
+          </div>
+        </div>
+
+        <div class="doa-box">
+          <h4>Doa Selepas Tasyahud Akhir</h4>
+          <div class="doa-arabic">
+            اَللَّهُمَّ إِنِّيْ ظَلَمْتُ نَفْسِيْ ظُلْمًا كَثِيْرًا وَلاَ يَغْفِرُ الذُّنُوْبَ إِلاَّ أَنْتَ، فَاغْفِرْ لِيْ مَغْفِرَةً مِنْ عِنْدِكَ وَارْحَمْنِيْ إِنَّكَ أَنْتَ الْغَفُوْرُ الرَّحِيْمُ
+          </div>
+          <div class="doa-translation">
+            Ya Allah, sesungguhnya aku telah menganiaya diriku dengan banyak kezaliman, dan tidak ada yang mengampunkan dosa melainkan Engkau, maka ampunilah dosaku dengan keampunan dari sisi-Mu dan rahmatilah aku. Sesungguhnya Engkau Maha Pengampun lagi Maha Penyayang.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <a href="index.html" class="back">← Kembali</a>
+  </div>
+
+  <script>
+    function showTab(tabName) {
+      // Hide all tabs
+      document.querySelectorAll('.tab-content').forEach(tab => {
+        tab.classList.remove('active');
+      });
+      
+      // Remove active from all buttons
+      document.querySelectorAll('.tab-button').forEach(btn => {
+        btn.classList.remove('active');
+      });
+      
+      // Show selected tab
+      document.getElementById(tabName).classList.add('active');
+      
+      // Add active to clicked button
+      event.target.classList.add('active');
+    }
+  </script>
 </body>
 </html>
