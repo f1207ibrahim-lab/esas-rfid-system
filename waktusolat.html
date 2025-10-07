@@ -1,39 +1,138 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Waktu Solat Smart Surau</title>
+    <link rel="stylesheet" href="css/style.css"> 
+    <style>
+        /* CSS Tambahan Khusus untuk Waktu Solat */
+        .prayer-container {
+            max-width: 400px;
+            margin: 20px auto;
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        .prayer-title {
+            text-align: center;
+            color: #1a73e8; /* Biru seperti admin dashboard */
+            margin-bottom: 20px;
+            font-size: 1.8em;
+        }
+        .prayer-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid #eee;
+            align-items: center;
+        }
+        .prayer-item:last-child {
+            border-bottom: none;
+        }
+        .prayer-name {
+            font-weight: bold;
+            color: #333;
+            font-size: 1.1em;
+        }
+        .prayer-time {
+            font-size: 1.2em;
+            color: #1a73e8;
+        }
+        .highlight {
+            background-color: #e6f7ff;
+            border-radius: 8px;
+            padding: 10px;
+            margin: 5px -10px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="prayer-container">
+    <h2 class="prayer-title">Jadual Waktu Solat Hari Ini</h2>
+    <div id="waktu-solat-list">
+        <p style="text-align: center;">Memuatkan waktu solat...</p>
+    </div>
+    <p style="text-align: center; font-size: 0.8em; margin-top: 20px; color: #666;">
+        *Data ini adalah contoh. Gantikan dengan API Waktu Solat sebenar.
+    </p>
+</div>
+
 <script>
-    // DATA WAKTU SOLAT STATIK TERKINI (Sila kemas kini ini setiap hari!)
-    // Kod Zon: JHR01 (Johor Bahru, Kulai, Pontian)
-    const waktuSolatStatik = [
-        // *Sila isikan data waktu solat semasa untuk hari ini
-        { nama: "Imsak", waktu: "05:40" }, 
-        { nama: "Subuh", waktu: "05:50" }, 
-        { nama: "Syuruk", waktu: "07:07" }, 
-        { nama: "Zuhur", waktu: "13:10" }, 
-        { nama: "Asar", waktu: "16:35" }, 
-        { nama: "Maghrib", waktu: "19:15" }, 
-        { nama: "Isyak", waktu: "20:25" } 
+    // DATA WAKTU SOLAT CONTOH
+    const waktuSolatContoh = [
+        { nama: "Imsak", waktu: "05:40" },
+        { nama: "Subuh", waktu: "05:50" },
+        { nama: "Syuruk", waktu: "07:07" },
+        { nama: "Zuhur", waktu: "13:10" },
+        { nama: "Asar", waktu: "16:35" },
+        { nama: "Maghrib", waktu: "19:15" },
+        { nama: "Isyak", waktu: "20:25" }
     ];
 
     const listContainer = document.getElementById('waktu-solat-list');
 
-    // MESEJ MAKLUMAN PENGGUNA
-    listContainer.innerHTML = '<p style="text-align: center; color: green;">Menggunakan jadual statik. Waktu dikemas kini setiap hari.</p>';
-
-    // (Kekalkan fungsi paparan dan pembantu yang lain di bawah)
-
     function paparkanWaktuSolat(data) {
-        // ... (Fungsi paparkanWaktuSolat yang sama dari kod sebelumnya)
-        // ...
+        listContainer.innerHTML = ''; // Kosongkan senarai sedia ada
+        const masaSemasa = dapatkanMasaSemasa(); // Cth: "16:45"
+        let waktuSeterusnyaDitemui = false;
+
+        data.forEach(solat => {
+            const div = document.createElement('div');
+            div.classList.add('prayer-item');
+
+            let waktu = solat.waktu;
+            let nama = solat.nama;
+
+            // Logik untuk menyerlahkan waktu solat seterusnya
+            // Kita abaikan Imsak dan Syuruk untuk penyerlahan solat fardhu
+            if (nama !== 'Imsak' && nama !== 'Syuruk' && !waktuSeterusnyaDitemui && waktuLebihBesar(waktu, masaSemasa)) {
+                div.classList.add('highlight');
+                waktuSeterusnyaDitemui = true;
+            }
+
+            div.innerHTML = `
+                <span class="prayer-name">${nama}</span>
+                <span class="prayer-time">${waktu}</span>
+            `;
+            listContainer.appendChild(div);
+        });
+
+        // Jika waktu seterusnya tidak ditemui (bermakna sudah Isyak), serlahkan Subuh hari esok
+        if (!waktuSeterusnyaDitemui) {
+            // Ini adalah logik ringkas untuk menyerlahkan item pertama (Imsak/Subuh)
+            const firstItem = listContainer.querySelector('.prayer-item');
+            if (firstItem) {
+                firstItem.classList.add('highlight');
+            }
+        }
     }
 
+    // Fungsi Pembantu JS
     function dapatkanMasaSemasa() {
-        // ... (Fungsi dapatkanMasaSemasa yang sama dari kod sebelumnya)
-        // ...
+        const date = new Date();
+        // Format masa HH:MM
+        const hours = String(date.getHours()).padStart(2, '0');
+        const minutes = String(date.getMinutes()).padStart(2, '0');
+        return `${hours}:${minutes}`;
     }
 
+    // Fungsi untuk membandingkan masa dalam format "HH:MM"
     function waktuLebihBesar(waktuA, waktuB) {
-        // ... (Fungsi waktuLebihBesar yang sama dari kod sebelumnya)
-        // ...
+        // Mengembalikan true jika waktuA (waktu solat) lebih lewat dari waktuB (masa semasa)
+        return waktuA.localeCompare(waktuB) > 0;
     }
 
-    // Panggil fungsi dengan data statik
-    paparkanWaktuSolat(waktuSolatStatik);
+
+    // Panggil fungsi untuk paparan awal
+    paparkanWaktuSolat(waktuSolatContoh);
+
+    // Anda boleh menambah fungsi untuk mengemas kini masa semasa setiap minit
+    // setInterval(() => { paparkanWaktuSolat(waktuSolatContoh); }, 60000);
+    
 </script>
+
+</body>
+</html>
