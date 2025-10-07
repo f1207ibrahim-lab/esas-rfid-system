@@ -23,16 +23,36 @@
       <div class="error" id="error-msg">Emel atau kata laluan salah</div>
     </div>
 
-    <div class="dashboard hidden" id="dashboard">
-      <h3>Selamat Datang, <span id="admin-name">Admin</span></h3>
-      <div class="menu">
-        <a href="attendance.html">📋 Lihat Kehadiran</a>
-        <a href="location.html">📍 Semak Lokasi</a>
-        <a href="waktusolat.html">🕌 Lihat Waktu Solat</a>
-        <a href="panduan.html" class="menu-button">📚 Panduan Wuduk & Solat</a>
-        <button onclick="logout()">Log Keluar</button>
-      </div>
-    </div>
+<div class="dashboard hidden" id="dashboard">
+    <h3>Selamat Datang, <span id="admin-name">Admin</span></h3>
+    
+    <div class="menu-grid">
+        
+        <a href="attendance.html" class="menu-item">
+            <i class="fas fa-clipboard-list"></i> 
+            <span>Lihat Kehadiran</span>
+        </a>
+        
+        <a href="location.html" class="menu-item">
+            <i class="fas fa-map-marker-alt"></i> 
+            <span>Semak Lokasi</span>
+        </a>
+        
+        <a href="waktusolat.html" class="menu-item">
+            <i class="fas fa-clock"></i> 
+            <span>Lihat Waktu Solat</span>
+        </a>
+        
+        <a href="panduan.html" class="menu-item">
+            <i class="fas fa-book-open"></i> 
+            <span>Panduan Wuduk & Solat</span>
+        </a>
+        
+    </div>
+
+    <button onclick="logout()" class="logout-button">Log Keluar</button>
+
+</div>
 
     <!-- Forgot Password Modal -->
     <div class="modal hidden" id="forgot-modal">
