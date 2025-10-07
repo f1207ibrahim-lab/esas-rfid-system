@@ -4,32 +4,29 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Waktu Solat Smart Surau</title>
+    <link rel="stylesheet" href="css/style.css"> 
     <style>
-        /* CSS ringkas untuk paparan mesra mudah alih */
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 20px;
-            background-color: #f4f4f9;
-        }
-        .container {
+        /* CSS Tambahan Khusus untuk Waktu Solat */
+        .prayer-container {
             max-width: 400px;
-            margin: 0 auto;
+            margin: 20px auto;
             background-color: #ffffff;
             padding: 20px;
             border-radius: 10px;
             box-shadow: 0 4px 8px rgba(0,0,0,0.1);
         }
-        h2 {
+        .prayer-title {
             text-align: center;
-            color: #1a73e8;
+            color: #1a73e8; /* Biru seperti admin dashboard */
             margin-bottom: 20px;
+            font-size: 1.8em;
         }
         .prayer-item {
             display: flex;
             justify-content: space-between;
-            padding: 10px 0;
+            padding: 12px 0;
             border-bottom: 1px solid #eee;
+            align-items: center;
         }
         .prayer-item:last-child {
             border-bottom: none;
@@ -37,28 +34,36 @@
         .prayer-name {
             font-weight: bold;
             color: #333;
+            font-size: 1.1em;
+        }
+        .prayer-time {
+            font-size: 1.2em;
+            color: #1a73e8;
         }
         .highlight {
             background-color: #e6f7ff;
-            border-radius: 5px;
-            padding: 5px;
+            border-radius: 8px;
+            padding: 10px;
+            margin: 5px -10px;
         }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <h2>Waktu Solat (Contoh Data)</h2>
+<div class="prayer-container">
+    <h2 class="prayer-title">Jadual Waktu Solat Hari Ini</h2>
     <div id="waktu-solat-list">
-        </div>
-    <p style="text-align: center; font-size: 0.8em; margin-top: 20px;">
+        <p style="text-align: center;">Memuatkan waktu solat...</p>
+    </div>
+    <p style="text-align: center; font-size: 0.8em; margin-top: 20px; color: #666;">
         *Data ini adalah contoh. Gantikan dengan API Waktu Solat sebenar.
     </p>
 </div>
 
 <script>
-    // Data Waktu Solat Contoh (Gantikan dengan panggilan API sebenar)
+    // DATA WAKTU SOLAT CONTOH
     const waktuSolatContoh = [
+        { nama: "Imsak", waktu: "05:40" },
         { nama: "Subuh", waktu: "05:50" },
         { nama: "Syuruk", waktu: "07:07" },
         { nama: "Zuhur", waktu: "13:10" },
@@ -81,8 +86,9 @@
             let waktu = solat.waktu;
             let nama = solat.nama;
 
-            // Logik ringkas untuk menyerlahkan waktu solat seterusnya
-            if (!waktuSeterusnyaDitemui && nama !== 'Syuruk' && waktuLebihBesar(waktu, masaSemasa)) {
+            // Logik untuk menyerlahkan waktu solat seterusnya
+            // Kita abaikan Imsak dan Syuruk untuk penyerlahan solat fardhu
+            if (nama !== 'Imsak' && nama !== 'Syuruk' && !waktuSeterusnyaDitemui && waktuLebihBesar(waktu, masaSemasa)) {
                 div.classList.add('highlight');
                 waktuSeterusnyaDitemui = true;
             }
@@ -93,6 +99,15 @@
             `;
             listContainer.appendChild(div);
         });
+
+        // Jika waktu seterusnya tidak ditemui (bermakna sudah Isyak), serlahkan Subuh hari esok
+        if (!waktuSeterusnyaDitemui) {
+            // Ini adalah logik ringkas untuk menyerlahkan item pertama (Imsak/Subuh)
+            const firstItem = listContainer.querySelector('.prayer-item');
+            if (firstItem) {
+                firstItem.classList.add('highlight');
+            }
+        }
     }
 
     // Fungsi Pembantu JS
@@ -106,7 +121,7 @@
 
     // Fungsi untuk membandingkan masa dalam format "HH:MM"
     function waktuLebihBesar(waktuA, waktuB) {
-        // Cth: waktuLebihBesar("16:35", "16:30") -> true
+        // Mengembalikan true jika waktuA (waktu solat) lebih lewat dari waktuB (masa semasa)
         return waktuA.localeCompare(waktuB) > 0;
     }
 
@@ -114,14 +129,9 @@
     // Panggil fungsi untuk paparan awal
     paparkanWaktuSolat(waktuSolatContoh);
 
-    // Untuk aplikasi sebenar, anda akan menggunakan fungsi ini untuk mengambil data dari API:
-    /*
-    async function dapatkanWaktuSolatDariAPI(lokasi) {
-        const response = await fetch(`URL_API_WAKTU_SOLAT?lokasi=${lokasi}`);
-        const data = await response.json();
-        // Proses data dan panggil paparkanWaktuSolat(dataTelahDiproses)
-    }
-    */
+    // Anda boleh menambah fungsi untuk mengemas kini masa semasa setiap minit
+    // setInterval(() => { paparkanWaktuSolat(waktuSolatContoh); }, 60000);
+    
 </script>
 
 </body>
